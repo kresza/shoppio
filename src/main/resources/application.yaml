@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: shoppio
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shoppio
+    username: shoppio_user
+    password: shoppio_pass
+
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://localhost:5432/shoppio
+    locations:
+      - classpath:db/migration/schema
+      - classpath:db/migration/data
+      - classpath:db/migration/function
+      -
+    user: shoppio_user
+    password: shoppio_pass
+
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+#  mvc:
+#    servlet:
+#      path: /api/v1
+
+server:
+  servlet:
+    context-path: /api/v1
+  port: 8080

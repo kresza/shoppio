@@ -1,0 +1,12 @@
+version: '1.0'
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: shoppio_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: shoppio
+      POSTGRES_USER: shoppio_user
+      POSTGRES_PASSWORD: shoppio_pass
