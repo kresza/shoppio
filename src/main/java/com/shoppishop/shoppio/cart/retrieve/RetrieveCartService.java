@@ -1,4 +1,4 @@
-package com.shoppishop.shoppio.cart;
+package com.shoppishop.shoppio.cart.retrieve;
 
 import com.shoppishop.shoppio.exceptions.BusinessException;
 import com.shoppishop.shoppio.models.BaseResponse;
@@ -13,14 +13,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CartService {
+public class RetrieveCartService {
 
-  private final CartRepository cartRepository;
+  private final RetrieveCartRepository retrieveCartRepository;
 
   public BaseResponse getAllCarts() {
     try {
       List<BasicCartDto> cartDto =
-          cartRepository.findAll().stream().map(this::mapToCartDto).toList();
+          retrieveCartRepository.findAll().stream().map(this::mapToCartDto).toList();
       return BaseResponse.builder().data(cartDto).build();
     } catch (Exception e) {
       throw BusinessException.builder()
@@ -33,7 +33,7 @@ public class CartService {
   public BaseResponse getAllCartsDetails() {
     try {
       List<CartDto> cartDto =
-          cartRepository.findAll().stream().map(this::mapToCartItemDto).toList();
+          retrieveCartRepository.findAll().stream().map(this::mapToCartItemDto).toList();
       cartDto.forEach(this::calculateAndEnrichCartWithTotalAmount);
       return BaseResponse.builder().data(cartDto).build();
     } catch (Exception e) {
@@ -47,7 +47,7 @@ public class CartService {
   public BaseResponse getCartById(String cartId) {
     try {
       return BaseResponse.builder()
-          .data(cartRepository.findCartById(cartId).stream().map(this::mapToCartItemDto).toList())
+          .data(retrieveCartRepository.findCartById(cartId).stream().map(this::mapToCartItemDto).toList())
           .build();
     } catch (Exception e) {
       throw BusinessException.builder()
@@ -55,6 +55,11 @@ public class CartService {
           .code(ErrorEnum.FETCHING_CART_ERROR.getCode())
           .build();
     }
+  }
+
+  public BaseResponse createCart(){
+
+    return BaseResponse.builder().build();
   }
 
   private CartDto mapToCartItemDto(CartEntity cartEntity) {

@@ -1,4 +1,4 @@
-package com.shoppishop.shoppio.cart;
+package com.shoppishop.shoppio.cart.retrieve;
 
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @JsonPropertyOrder({ "cartId", "cartItems", "totalAmount"})
-class CartDto {
+public class CartDto {
     
     private String cartId;
     

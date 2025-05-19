@@ -1,4 +1,4 @@
-package com.shoppishop.shoppio.cart;
+package com.shoppishop.shoppio.cart.retrieve;
 
 import com.shoppishop.shoppio.products.ProductEntity;
 import jakarta.persistence.Column;
@@ -14,7 +14,7 @@ import lombok.Getter;
 @Entity
 @Getter
 @Table(name = "cart_item")
-class CartItemEntity {
+public class CartItemEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

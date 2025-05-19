@@ -1,4 +1,4 @@
-package com.shoppishop.shoppio.cart;
+package com.shoppishop.shoppio.cart.retrieve;
 
 import com.shoppishop.shoppio.models.BaseResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,25 +10,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/retrieve/cart")
 @RequiredArgsConstructor
-@Tag(name = "Cart Controller")
-public class CartController {
+@Tag(name = "Retrieve Cart Controller")
+public class RetrieveCartController {
 
-  private final CartService cartService;
+  private final RetrieveCartService retrieveCartService;
 
   @GetMapping("/all")
   public ResponseEntity<BaseResponse> getAllCarts(){
-    return ResponseEntity.ok(cartService.getAllCarts());
+    return ResponseEntity.ok(retrieveCartService.getAllCarts());
   }
 
   @GetMapping("/details/all")
   public ResponseEntity<BaseResponse> getAllCartsDetails() {
-    return ResponseEntity.ok(cartService.getAllCartsDetails());
+    return ResponseEntity.ok(retrieveCartService.getAllCartsDetails());
   }
 
   @GetMapping("/details/by-id")
   public ResponseEntity<BaseResponse> getCartDetailsById(@RequestParam String cartId) {
-    return ResponseEntity.ok(cartService.getCartById(cartId));
+    return ResponseEntity.ok(retrieveCartService.getCartById(cartId));
   }
 }

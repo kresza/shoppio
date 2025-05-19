@@ -1,4 +1,4 @@
-package com.shoppishop.shoppio.cart;
+package com.shoppishop.shoppio.cart.retrieve;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +13,7 @@ import lombok.Getter;
 @Entity
 @Getter
 @Table(name = "cart")
-class CartEntity {
+public class CartEntity {
 
   @Id
   @Column(name = "cart_id")

@@ -1,4 +1,4 @@
-package com.shoppishop.shoppio.cart;
+package com.shoppishop.shoppio.cart.retrieve;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.shoppishop.shoppio.products.ProductDto;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @JsonPropertyOrder({ "product", "quantity" })
-class CartItemDto {
+public class CartItemDto {
     
     private ProductDto product;
     private Integer quantity;
