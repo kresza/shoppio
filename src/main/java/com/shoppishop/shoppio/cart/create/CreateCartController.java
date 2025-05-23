@@ -52,6 +52,6 @@ public class CreateCartController {
   public ResponseEntity<BaseResponse> createCart(@Valid @RequestBody CreateCartRequest request) {
     log.info(request.toString());
     System.out.println(request);
-    return ResponseEntity.ok(createCartService.createCart());
+    return ResponseEntity.ok(createCartService.createCart(request));
   }
 }
