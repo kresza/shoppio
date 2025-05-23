@@ -33,8 +33,11 @@ public class RetrieveCartService {
   public BaseResponse getAllCartsDetails() {
     try {
       List<CartDto> cartDto =
-          retrieveCartRepository.findAll().stream().map(this::mapToCartItemDto).toList();
-      cartDto.forEach(this::calculateAndEnrichCartWithTotalAmount);
+          retrieveCartRepository.findAll().stream()
+              .map(this::mapToCartItemDto)
+              .map(this::calculateAndEnrichCartWithTotalAmount)
+              .toList();
+//      cartDto.forEach(this::calculateAndEnrichCartWithTotalAmount);
       return BaseResponse.builder().data(cartDto).build();
     } catch (Exception e) {
       throw BusinessException.builder()
@@ -47,7 +50,11 @@ public class RetrieveCartService {
   public BaseResponse getCartById(String cartId) {
     try {
       return BaseResponse.builder()
-          .data(retrieveCartRepository.findCartById(cartId).stream().map(this::mapToCartItemDto).toList())
+          .data(
+              retrieveCartRepository.findCartById(cartId).stream()
+                  .map(this::mapToCartItemDto)
+                  .map(this::calculateAndEnrichCartWithTotalAmount)
+                  .toList())
           .build();
     } catch (Exception e) {
       throw BusinessException.builder()
@@ -57,7 +64,7 @@ public class RetrieveCartService {
     }
   }
 
-  public BaseResponse createCart(){
+  public BaseResponse createCart() {
 
     return BaseResponse.builder().build();
   }
@@ -90,9 +97,15 @@ public class RetrieveCartService {
         .build();
   }
 
-  private void calculateAndEnrichCartWithTotalAmount(CartDto cartDto) {
+  //  private void calculateAndEnrichCartWithTotalAmount(CartDto cartDto) {
+  //    double totalAmount = calculateTotalAmount(cartDto);
+  //    cartDto.setTotalAmount(roundAmountHalfUp(totalAmount));
+  //  }
+
+  private CartDto calculateAndEnrichCartWithTotalAmount(CartDto cartDto) {
     double totalAmount = calculateTotalAmount(cartDto);
     cartDto.setTotalAmount(roundAmountHalfUp(totalAmount));
+    return cartDto;
   }
 
   private static double roundAmountHalfUp(double totalAmount) {

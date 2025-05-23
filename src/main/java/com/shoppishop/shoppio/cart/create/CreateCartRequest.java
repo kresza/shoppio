@@ -1,14 +1,12 @@
 package com.shoppishop.shoppio.cart.create;
 
 
-import jakarta.validation.Valid;
-import lombok.Data;
+import com.shoppishop.shoppio.cart.AbstractCartRequest;
+import lombok.EqualsAndHashCode;
 
-import java.util.List;
+@EqualsAndHashCode(callSuper = true)
+public class CreateCartRequest extends AbstractCartRequest {
 
-@Data
-public class CreateCartRequest {
-
-    @Valid
-    private List<CreateCartItem> items;
+//    @Valid
+//    private List<CreateCartItem> items;
 }

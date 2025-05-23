@@ -2,6 +2,7 @@ package com.shoppishop.shoppio.cart.create;
 
 import com.shoppishop.shoppio.cart.retrieve.CartEntity;
 import com.shoppishop.shoppio.cart.retrieve.CartItemEntity;
+import com.shoppishop.shoppio.cart.update.UpdateCartRequest;
 import com.shoppishop.shoppio.exceptions.BusinessException;
 import com.shoppishop.shoppio.models.BaseResponse;
 import com.shoppishop.shoppio.products.ProductEntity;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CreateCartService {
+public class CartService {
 
   private static final String PRODUCT_NOT_FOUND_ERROR = "Product with given id: %d not found";
   private final CartRepository cartRepository;
@@ -28,6 +29,18 @@ public class CreateCartService {
     CartEntity cartEntity = mapToCartEntity(items, generatedCartId);
     cartRepository.save(cartEntity);
 
+    // TODO build response
+    return BaseResponse.builder().build();
+  }
+
+  public BaseResponse deleteCart(String cartId){
+    cartRepository.deleteByCartId(cartId);
+    return BaseResponse.builder().build();
+  }
+
+  // TODO retrieve existing products and add quantity if the same or create new
+  public BaseResponse addProduct(String cartId, UpdateCartRequest updateCartRequest){
+    cartRepository.deleteByCartId(cartId);
     return BaseResponse.builder().build();
   }
 
