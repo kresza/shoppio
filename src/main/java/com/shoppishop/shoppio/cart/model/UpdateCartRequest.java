@@ -1,6 +1,5 @@
-package com.shoppishop.shoppio.cart.update;
+package com.shoppishop.shoppio.cart.model;
 
-import com.shoppishop.shoppio.cart.AbstractCartRequest;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)

@@ -28,7 +28,7 @@ public class RetrieveCartController {
   }
 
   @GetMapping("/details/by-id")
-  public ResponseEntity<BaseResponse> getCartDetailsById(@RequestParam String cartId) {
+  public ResponseEntity<BaseResponse> getCartDetailsById(@RequestParam String cartId, @RequestParam(required = false) String promotion) {
     return ResponseEntity.ok(retrieveCartService.getCartById(cartId));
   }
 }

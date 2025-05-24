@@ -1,5 +1,6 @@
 package com.shoppishop.shoppio.cart.create;
 
+import com.shoppishop.shoppio.cart.model.CreateCartRequest;
 import com.shoppishop.shoppio.models.BaseResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class CreateCartController {
 
   private final CartService cartService;
 
-  @Deprecated
+  @Deprecated(since = "New endpoint created")
   public ResponseEntity<BaseResponse> createCart(@Valid @RequestBody CreateCartRequest request) {
     log.info(request.toString());
     System.out.println(request);

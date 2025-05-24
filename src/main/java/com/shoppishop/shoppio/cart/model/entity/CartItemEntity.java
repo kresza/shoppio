@@ -1,6 +1,6 @@
-package com.shoppishop.shoppio.cart.retrieve;
+package com.shoppishop.shoppio.cart.model.entity;
 
-import com.shoppishop.shoppio.products.ProductEntity;
+import com.shoppishop.shoppio.catalogue.products.ProductEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,11 +14,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 @Table(name = "cart_item")
 public class CartItemEntity {

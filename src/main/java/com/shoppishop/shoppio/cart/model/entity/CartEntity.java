@@ -1,4 +1,4 @@
-package com.shoppishop.shoppio.cart.retrieve;
+package com.shoppishop.shoppio.cart.model.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

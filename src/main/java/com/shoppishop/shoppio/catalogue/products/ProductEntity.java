@@ -1,4 +1,4 @@
-package com.shoppishop.shoppio.products;
+package com.shoppishop.shoppio.catalogue.products;
 
 import com.shoppishop.shoppio.dictionaries.category.CategoryEntity;
 import jakarta.persistence.Column;

@@ -1,5 +1,6 @@
 package com.shoppishop.shoppio.catalogue;
 
+import com.shoppishop.shoppio.catalogue.products.CatalogueService;
 import com.shoppishop.shoppio.models.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

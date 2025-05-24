@@ -1,6 +1,6 @@
-package com.shoppishop.shoppio.cart;
+package com.shoppishop.shoppio.cart.model;
 
-import com.shoppishop.shoppio.cart.create.CreateCartItem;
+import com.shoppishop.shoppio.cart.model.dto.CreateCartItem;
 import jakarta.validation.Valid;
 import lombok.Data;
 

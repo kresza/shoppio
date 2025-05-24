@@ -1,4 +1,4 @@
-package com.shoppishop.shoppio.cart.retrieve;
+package com.shoppishop.shoppio.cart.model.dto;
 
 import lombok.Builder;
 

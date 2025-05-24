@@ -1,7 +1,7 @@
-package com.shoppishop.shoppio.cart.retrieve;
+package com.shoppishop.shoppio.cart.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.shoppishop.shoppio.products.ProductDto;
+import com.shoppishop.shoppio.catalogue.products.ProductDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

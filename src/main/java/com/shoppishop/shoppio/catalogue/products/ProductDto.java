@@ -1,4 +1,4 @@
-package com.shoppishop.shoppio.products;
+package com.shoppishop.shoppio.catalogue.products;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,81 +1,109 @@
 package com.shoppishop.shoppio.cart.create;
 
-import com.shoppishop.shoppio.cart.retrieve.CartEntity;
-import com.shoppishop.shoppio.cart.retrieve.CartItemEntity;
-import com.shoppishop.shoppio.cart.update.UpdateCartRequest;
+import com.shoppishop.shoppio.cart.CartUtils;
+import com.shoppishop.shoppio.cart.enrichment.CartItemMapper;
+import com.shoppishop.shoppio.cart.model.CreateCartRequest;
+import com.shoppishop.shoppio.cart.model.entity.CartEntity;
+import com.shoppishop.shoppio.cart.model.entity.CartItemEntity;
+import com.shoppishop.shoppio.cart.retrieve.RetrieveCartRepository;
+import com.shoppishop.shoppio.catalogue.products.ProductEntity;
+import com.shoppishop.shoppio.catalogue.products.ProductFetcher;
 import com.shoppishop.shoppio.exceptions.BusinessException;
 import com.shoppishop.shoppio.models.BaseResponse;
-import com.shoppishop.shoppio.products.ProductEntity;
-import com.shoppishop.shoppio.products.ProductRepository;
-import java.util.List;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
 
-  private static final String PRODUCT_NOT_FOUND_ERROR = "Product with given id: %d not found";
-  private final CartRepository cartRepository;
-  private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
+    private final RetrieveCartRepository retrieveCartRepository;
+    private final CartItemMapper cartItemMapper;
+    private final CartItemRepository cartItemRepository;
+    private final ProductFetcher productFetcher;
+    private final EntityManager entityManager;
 
-  public BaseResponse createCart(CreateCartRequest request) {
+    public BaseResponse createCart(CreateCartRequest request) {
 
-    String lastCreatedCartId = getLastCreatedCartId();
-    String generatedCartId = CodeGenerator.generateCartIdCode(lastCreatedCartId);
+        String lastCreatedCartId = getLastCreatedCartId();
+        String generatedCartId = CodeGenerator.generateCartIdCode(lastCreatedCartId);
 
-    List<CartItemEntity> items = extractAndMapItemsToEntities(request, generatedCartId);
+        if (request == null) {
+            cartRepository.save(CartEntity.builder().cartId(generatedCartId).build());
+            return CartUtils.buildCartCreateResponse(generatedCartId);
+        }
 
-    CartEntity cartEntity = mapToCartEntity(items, generatedCartId);
-    cartRepository.save(cartEntity);
+        List<CartItemEntity> items =
+                cartItemMapper.extractAndMapItemsToEntities(request, generatedCartId);
+        CartEntity cartEntity = CartUtils.mapToCartEntity(items, generatedCartId);
 
-    // TODO build response
-    return BaseResponse.builder().build();
-  }
+        cartRepository.save(cartEntity);
+        return CartUtils.buildCartCreateResponse(generatedCartId);
+    }
 
-  public BaseResponse deleteCart(String cartId){
-    cartRepository.deleteByCartId(cartId);
-    return BaseResponse.builder().build();
-  }
+    public BaseResponse deleteCart(String cartId) {
+//        productFetcher.deleteAllProductsFromCart(cartId);
+        cartRepository.deleteByCartId(cartId);
+        return BaseResponse.builder().build();
+    }
 
-  // TODO retrieve existing products and add quantity if the same or create new
-  public BaseResponse addProduct(String cartId, UpdateCartRequest updateCartRequest){
-    cartRepository.deleteByCartId(cartId);
-    return BaseResponse.builder().build();
-  }
+    public BaseResponse addProduct(String cartId, Long productId, Integer quantity) {
+        CartEntity cartEntity = retrieveCartRepository.findCartById(cartId);
 
-  private CartEntity mapToCartEntity(List<CartItemEntity> items, String generatedCartId) {
-    return CartEntity.builder().cartItemEntity(items).cartId(generatedCartId).build();
-  }
+        if (cartEntity == null) {
+            return CartUtils.buildCartNotFoundResponse();
+        }
 
-  private List<CartItemEntity> extractAndMapItemsToEntities(
-      CreateCartRequest request, String generatedCartId) {
-    return request.getItems().stream()
-        .map(item -> mapCartItemToEntity(item, generatedCartId))
-        .toList();
-  }
+        Optional<CartItemEntity> existItem = CartUtils.findExistingItem(productId, cartEntity);
 
-  private CartItemEntity mapCartItemToEntity(CreateCartItem item, String generatedCartId) {
-    ProductEntity productEntity = fetchProduct(item.getProductId());
+        if (existItem.isPresent()) {
+            CartItemEntity cartItemEntity = CartUtils.addQuantity(quantity, existItem.get());
+            cartItemRepository.save(cartItemEntity);
+        } else {
+            ProductEntity productEntity = productFetcher.fetchProduct(productId);
+            cartItemRepository.save(
+                    CartUtils.buildCartItem(quantity, cartEntity, productEntity));
+        }
 
-    return CartItemEntity.builder()
-        .cartId(generatedCartId)
-        .quantity(item.getQuantity())
-        .productEntity(productEntity)
-        .build();
-  }
+        return BaseResponse.builder()
+                .warnings(List.of(CartUtils.buildSuccessfullyAddedProductMessage(cartId)))
+                .build();
+    }
 
-  private String getLastCreatedCartId() {
-    return cartRepository.findTopByOrderByCartIdDesc().map(CartEntity::getCartId).orElse(null);
-  }
+    public BaseResponse deleteProduct(String cartId, Long productId, Integer quantity) {
+        CartEntity cartEntity = retrieveCartRepository.findCartById(cartId);
 
-  private ProductEntity fetchProduct(Long id) {
-    return productRepository
-        .findById(id)
-        .orElseThrow(
-            () ->
-                BusinessException.builder()
-                    .message(String.format(PRODUCT_NOT_FOUND_ERROR, id))
-                    .build());
-  }
+        if (cartEntity == null) {
+            return CartUtils.buildCartNotFoundResponse();
+        }
+
+        Optional<CartItemEntity> existItem = CartUtils.findExistingItem(productId, cartEntity);
+
+        if (existItem.isPresent()) {
+            CartItemEntity cartItemEntity = existItem.get();
+            if (cartItemEntity.getQuantity() <= quantity) {
+                cartItemRepository.deleteItemByCartId(cartItemEntity.getId());
+            } else {
+                cartItemEntity = CartUtils.removeQuantity(quantity, existItem.get());
+                cartItemRepository.save(cartItemEntity);
+            }
+        } else {
+            throw BusinessException.builder()
+                    .message(String.format("Product not found in cart: %s", cartId))
+                    .build();
+        }
+
+        return BaseResponse.builder()
+                .warnings(List.of(CartUtils.buildSuccessfullyProductRemovedMessage(cartId)))
+                .build();
+    }
+
+    private String getLastCreatedCartId() {
+        return cartRepository.findTopByOrderByCartIdDesc().map(CartEntity::getCartId).orElse(null);
+    }
 }
