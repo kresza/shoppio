@@ -8,5 +8,5 @@ import lombok.Getter;
 public class ResponseMessage {
 
     private String message;
-    private Long code;
+    @Builder.Default private Long code = 200L;
 }

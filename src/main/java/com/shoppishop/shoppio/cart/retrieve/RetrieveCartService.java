@@ -1,18 +1,22 @@
 package com.shoppishop.shoppio.cart.retrieve;
 
-import com.shoppishop.shoppio.cart.enrichment.TotalAmountEnrichment;
 import com.shoppishop.shoppio.cart.model.dto.BasicCartDto;
 import com.shoppishop.shoppio.cart.model.dto.CartDto;
 import com.shoppishop.shoppio.cart.model.dto.CartItemDto;
 import com.shoppishop.shoppio.cart.model.entity.CartEntity;
+import com.shoppishop.shoppio.cart.price.PromoCodes;
+import com.shoppishop.shoppio.cart.price.TotalAmountEnrichment;
+import com.shoppishop.shoppio.cart.price.TotalAmountPromotion;
+import com.shoppishop.shoppio.catalogue.products.ProductDto;
+import com.shoppishop.shoppio.catalogue.products.ProductEntity;
 import com.shoppishop.shoppio.exceptions.BusinessException;
 import com.shoppishop.shoppio.models.BaseResponse;
 import com.shoppishop.shoppio.models.ErrorEnum;
-import com.shoppishop.shoppio.catalogue.products.ProductDto;
-import com.shoppishop.shoppio.catalogue.products.ProductEntity;
+import com.shoppishop.shoppio.models.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,6 +25,7 @@ public class RetrieveCartService {
 
     private final RetrieveCartRepository retrieveCartRepository;
     private final TotalAmountEnrichment totalAmountEnrichment;
+    private final TotalAmountPromotion totalAmountPromotion;
 
     public BaseResponse getAllCarts() {
         try {
@@ -50,14 +55,15 @@ public class RetrieveCartService {
         }
     }
 
-    public BaseResponse getCartById(String cartId) {
+    public BaseResponse getCartById(String cartId, PromoCodes promotion) {
         try {
-            return BaseResponse.builder()
-                    .data(
-                            List.of(
-                                    mapCartToDtoAndEnrichWithTotalAmount(
-                                            retrieveCartRepository.findCartById(cartId))))
-                    .build();
+            List<ResponseMessage> warnings = new ArrayList<>();
+            CartEntity cartEntity = retrieveCartRepository.findCartById(cartId);
+            CartDto cartDto = mapCartToDtoAndEnrichWithTotalAmount(cartEntity);
+            if (promotion != null) {
+                totalAmountPromotion.addPromotion(cartDto, promotion.getPromoCode(), warnings);
+            }
+            return BaseResponse.builder().data(List.of(cartDto)).warnings(warnings).build();
         } catch (Exception e) {
             throw BusinessException.builder()
                     .message(

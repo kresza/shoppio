@@ -1,4 +1,4 @@
-package com.shoppishop.shoppio.cart.enrichment;
+package com.shoppishop.shoppio.cart.price;
 
 import com.shoppishop.shoppio.cart.model.dto.CartDto;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ public class TotalAmountEnrichment {
         return cartDto;
     }
 
-    private double roundAmountHalfUp(double totalAmount) {
+    double roundAmountHalfUp(double totalAmount) {
         return BigDecimal.valueOf(totalAmount).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 

@@ -1,7 +1,7 @@
 package com.shoppishop.shoppio.cart.create;
 
 import com.shoppishop.shoppio.cart.CartUtils;
-import com.shoppishop.shoppio.cart.enrichment.CartItemMapper;
+import com.shoppishop.shoppio.cart.model.CartItemMapper;
 import com.shoppishop.shoppio.cart.model.CreateCartRequest;
 import com.shoppishop.shoppio.cart.model.entity.CartEntity;
 import com.shoppishop.shoppio.cart.model.entity.CartItemEntity;
@@ -10,7 +10,6 @@ import com.shoppishop.shoppio.catalogue.products.ProductEntity;
 import com.shoppishop.shoppio.catalogue.products.ProductFetcher;
 import com.shoppishop.shoppio.exceptions.BusinessException;
 import com.shoppishop.shoppio.models.BaseResponse;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,6 @@ public class CartService {
     private final CartItemMapper cartItemMapper;
     private final CartItemRepository cartItemRepository;
     private final ProductFetcher productFetcher;
-    private final EntityManager entityManager;
 
     public BaseResponse createCart(CreateCartRequest request) {
 
@@ -47,7 +45,6 @@ public class CartService {
     }
 
     public BaseResponse deleteCart(String cartId) {
-//        productFetcher.deleteAllProductsFromCart(cartId);
         cartRepository.deleteByCartId(cartId);
         return BaseResponse.builder().build();
     }
@@ -66,12 +63,12 @@ public class CartService {
             cartItemRepository.save(cartItemEntity);
         } else {
             ProductEntity productEntity = productFetcher.fetchProduct(productId);
-            cartItemRepository.save(
-                    CartUtils.buildCartItem(quantity, cartEntity, productEntity));
+            cartItemRepository.save(CartUtils.buildCartItem(quantity, cartEntity, productEntity));
         }
 
         return BaseResponse.builder()
                 .warnings(List.of(CartUtils.buildSuccessfullyAddedProductMessage(cartId)))
+                .data(List.of(String.format("Product id: %d", productId)))
                 .build();
     }
 

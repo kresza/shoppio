@@ -1,6 +1,5 @@
-package com.shoppishop.shoppio.cart.enrichment;
+package com.shoppishop.shoppio.cart.model;
 
-import com.shoppishop.shoppio.cart.model.CreateCartRequest;
 import com.shoppishop.shoppio.cart.model.dto.CreateCartItem;
 import com.shoppishop.shoppio.cart.model.entity.CartItemEntity;
 import com.shoppishop.shoppio.catalogue.products.ProductEntity;
