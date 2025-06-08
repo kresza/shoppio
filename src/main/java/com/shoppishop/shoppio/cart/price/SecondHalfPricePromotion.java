@@ -25,4 +25,5 @@ public class SecondHalfPricePromotion {
             return itemPairs * (price + price * 0.5) + soloProducts * price;
         }
     }
+
 }
