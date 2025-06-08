@@ -30,5 +30,6 @@ class TotalAmountEnrichmentTest implements TestStubs {
                 .isEqualTo(givenCartDto);
 
         assertThat(cartDto.getTotalAmount()).isEqualTo(expectedAmount);
+
     }
 }
