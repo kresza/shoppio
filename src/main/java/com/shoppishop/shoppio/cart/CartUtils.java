@@ -3,14 +3,11 @@ package com.shoppishop.shoppio.cart;
 import com.shoppishop.shoppio.cart.model.entity.CartEntity;
 import com.shoppishop.shoppio.cart.model.entity.CartItemEntity;
 import com.shoppishop.shoppio.catalogue.products.ProductEntity;
-import com.shoppishop.shoppio.exceptions.BusinessException;
 import com.shoppishop.shoppio.models.BaseResponse;
 import com.shoppishop.shoppio.models.ResponseMessage;
-import lombok.experimental.UtilityClass;
-import org.apache.logging.log4j.util.InternalException;
-
 import java.util.List;
 import java.util.Optional;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class CartUtils {
@@ -48,11 +45,6 @@ public class CartUtils {
                 .build();
     }
 
-    public ResponseMessage buildCartNotFoundMessage() {
-        return ResponseMessage.builder().message("Cart not found").code(503L).build();
-    }
-
-
     public CartEntity mapToCartEntity(List<CartItemEntity> items, String generatedCartId) {
         return CartEntity.builder().cartItemEntity(items).cartId(generatedCartId).build();
     }
@@ -63,12 +55,6 @@ public class CartUtils {
                 .cartId(cartEntity.getCartId())
                 .quantity(quantity)
                 .productEntity(productEntity)
-                .build();
-    }
-
-    public static BaseResponse buildCartNotFoundResponse() {
-        return BaseResponse.builder()
-                .errors(List.of(CartUtils.buildCartNotFoundMessage()))
                 .build();
     }
 

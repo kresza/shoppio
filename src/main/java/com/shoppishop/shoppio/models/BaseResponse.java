@@ -14,7 +14,7 @@ import lombok.Setter;
 public class BaseResponse {
 
   @Builder.Default private List<ResponseMessage> warnings = new ArrayList<>();
-  private List<?> data;
+  @Builder.Default private List<?> data = new ArrayList<>();
   @Builder.Default private List<ResponseMessage> errors = new ArrayList<>();
 
   public void addError(ResponseMessage message) {

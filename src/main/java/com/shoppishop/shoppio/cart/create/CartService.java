@@ -10,11 +10,10 @@ import com.shoppishop.shoppio.catalogue.products.ProductEntity;
 import com.shoppishop.shoppio.catalogue.products.ProductFetcher;
 import com.shoppishop.shoppio.exceptions.BusinessException;
 import com.shoppishop.shoppio.models.BaseResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +52,11 @@ public class CartService {
         CartEntity cartEntity = retrieveCartRepository.findCartById(cartId);
 
         if (cartEntity == null) {
-            return CartUtils.buildCartNotFoundResponse();
+//            return CartUtils.buildCartNotFoundResponse();
+            throw BusinessException.builder()
+                    .message(String.format("Cart: {%s} not exist", cartId))
+                    .code(401L)
+                    .build();
         }
 
         Optional<CartItemEntity> existItem = CartUtils.findExistingItem(productId, cartEntity);
@@ -76,7 +79,11 @@ public class CartService {
         CartEntity cartEntity = retrieveCartRepository.findCartById(cartId);
 
         if (cartEntity == null) {
-            return CartUtils.buildCartNotFoundResponse();
+      //            return CartUtils.buildCartNotFoundResponse();
+      throw BusinessException.builder()
+          .message(String.format("Cart: {%s} not exist", cartId))
+          .code(401L)
+          .build();
         }
 
         Optional<CartItemEntity> existItem = CartUtils.findExistingItem(productId, cartEntity);

@@ -20,8 +20,6 @@ public class CreateCartController {
 
   @Deprecated(since = "New endpoint created")
   public ResponseEntity<BaseResponse> createCart(@Valid @RequestBody CreateCartRequest request) {
-    log.info(request.toString());
-    System.out.println(request);
     return ResponseEntity.ok(cartService.createCart(request));
   }
 }
